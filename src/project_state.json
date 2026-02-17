@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Add authentication via Internet Identity and a user-to-user private real-time chat feature with a user list and 3-second message refresh.",
+  "architectural_notes": [
+    "Private chat should refresh/poll for new messages every 3 seconds (or equivalent real-time update mechanism)."
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-verify-internet-identity-login-is-already-implemented-and-exposed-in-the-ui-do-not-add-a-second-duplicate-login-implementation-if-login-is-already-present-leave-the-existing-login-logout-ux-intact",
+      "title": "Verify Internet Identity login is already implemented and exposed in the UI; do not add a second/duplicate login implementation. If login is already present, leave the existing login/logout UX intact.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-chat-entry-point-in-the-authenticated-ui-a-button-that-opens-a-modal-listing-users-selecting-a-user-opens-a-private-chat-view-with-that-user",
+      "title": "Add a \"Chat\" entry point in the authenticated UI: a button that opens a modal listing users; selecting a user opens a private chat view with that user.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-private-chat-ui-behavior-with-polling-display-message-history-allow-sending-messages-and-refresh-for-new-messages-automatically-every-3-seconds-while-the-chat-is-open",
+      "title": "Implement private chat UI behavior with polling: display message history, allow sending messages, and refresh for new messages automatically every 3 seconds while the chat is open.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Add Internet Identity login (only if not already present in the app).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add private user-to-user chat: button opens user list, selecting a user starts a private real-time chat; refresh/poll for new messages every 3 seconds.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add backend support for private 1:1 chat: store messages per conversation, allow authenticated users to send messages to another user, and allow fetching messages for a conversation (with a way to fetch only new messages since the last seen message).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Add a backend query endpoint to return a selectable list of users for starting a chat (excluding the caller). The list must include enough information for the UI to display each user (at minimum: principal + username/display name via existing profile data).",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Chrpz Chat",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

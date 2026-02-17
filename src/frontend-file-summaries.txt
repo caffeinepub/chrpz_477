@@ -1,0 +1,10 @@
+{
+  "frontend/src/App.tsx": "Main application component with routing, state management, and modal orchestration including new chat functionality (user picker and private chat modals).",
+  "frontend/src/components/TopHeader.tsx": "Header component with logo, navigation, authentication controls (login/logout), and new chat button that opens the user picker modal.",
+  "frontend/src/components/ChatUserPickerModal.tsx": "Modal component that displays a list of users with avatars and usernames for selecting a chat recipient.",
+  "frontend/src/components/PrivateChatModal.tsx": "Modal component for private 1:1 chat with message history display, real-time polling every 3 seconds, and message sending functionality with a string title.",
+  "frontend/src/hooks/usePrivateChat.ts": "Custom hook managing private chat state, message polling (every 3 seconds), conversation loading, and message sending with automatic deduplication.",
+  "frontend/src/hooks/useQueries.ts": "Centralized React Query hooks for all backend operations including new chat user selection list query.",
+  "frontend/src/components/Comment.tsx": "Comment component displaying individual comments with like/unlike functionality, reply form, and delete capability for comment authors.",
+  "frontend/src/components/UserListModal.tsx": "Modal component displaying lists of followers or following users with inline hooks for fetching user lists and profile data."
+}

@@ -1,0 +1,69 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-verify-internet-identity-login-is-already-implemented-and-exposed-in-the-ui-do-not-add-a-second-duplicate-login-implementation-if-login-is-already-present-leave-the-existing-login-logout-ux-intact",
+      "featureTitle": "Verify Internet Identity login is already implemented and exposed in the UI; do not add a second/duplicate login implementation. If login is already present, leave the existing login/logout UX intact.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/TopHeader.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "build-template-react@1.0.0",
+        "shadcn-ui@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-chat-entry-point-in-the-authenticated-ui-a-button-that-opens-a-modal-listing-users-selecting-a-user-opens-a-private-chat-view-with-that-user",
+      "featureTitle": "Add a \"Chat\" entry point in the authenticated UI: a button that opens a modal listing users; selecting a user opens a private chat view with that user.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/ChatUserPickerModal.tsx",
+        "frontend/src/components/TopHeader.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "build-template-react@1.0.0",
+        "shadcn-ui@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-private-chat-ui-behavior-with-polling-display-message-history-allow-sending-messages-and-refresh-for-new-messages-automatically-every-3-seconds-while-the-chat-is-open",
+      "featureTitle": "Implement private chat UI behavior with polling: display message history, allow sending messages, and refresh for new messages automatically every 3 seconds while the chat is open.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/PrivateChatModal.tsx",
+        "frontend/src/hooks/usePrivateChat.ts",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "build-template-react@1.0.0",
+        "shadcn-ui@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

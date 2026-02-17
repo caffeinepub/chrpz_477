@@ -1,0 +1,118 @@
+{
+  "kind": "build_request",
+  "title": "Add private 1:1 chat with user picker and 3-second polling",
+  "projectName": "Chrpz Chat",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Verify Internet Identity login is already implemented and exposed in the UI; do not add a second/duplicate login implementation. If login is already present, leave the existing login/logout UX intact.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "recent-messages-5"
+        ],
+        "quotes": [
+          "Add internet identity login(don't add if it already exists in the app)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When logged out, the existing \"Login\" button in the top header still signs in via Internet Identity.",
+        "When logged in, the existing logout flow still works.",
+        "No additional/duplicate Internet Identity providers, contexts, or login buttons are added beyond what already exists."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Add backend support for private 1:1 chat: store messages per conversation, allow authenticated users to send messages to another user, and allow fetching messages for a conversation (with a way to fetch only new messages since the last seen message).",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "recent-messages-5"
+        ],
+        "quotes": [
+          "private chat with users ... start a Private online Real time chat with them , Refreshing itself for new massages every 3 seconds"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Unauthenticated (anonymous) callers cannot send messages and receive a clear trap error.",
+        "Authenticated users can send a message to a specific recipient principal.",
+        "Messages are stored and can be retrieved for a given pair of users (same conversation regardless of sender/receiver order).",
+        "Fetching messages supports incremental updates (e.g., by \"after message id\" or \"after timestamp\") so the frontend can poll efficiently every 3 seconds."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Add a backend query endpoint to return a selectable list of users for starting a chat (excluding the caller). The list must include enough information for the UI to display each user (at minimum: principal + username/display name via existing profile data).",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "recent-messages-5"
+        ],
+        "quotes": [
+          "a button That When you click brings up a list of users then you click on one of the users"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The endpoint returns only users who have profiles (i.e., exist in the app’s profile store).",
+        "The caller is not included in the returned user list.",
+        "The frontend can render the list with each user’s display name/username and avatar (using existing profile picture fetching)."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Add a \"Chat\" entry point in the authenticated UI: a button that opens a modal listing users; selecting a user opens a private chat view with that user.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "recent-messages-5"
+        ],
+        "quotes": [
+          "Like a button That When you click brings up a list of users then you click on one of the users and you start a Private online Real time chat with them"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When logged in, a user can open a chat user-picker modal from the main UI (e.g., top header).",
+        "The user-picker modal lists users with their avatar and display name/username.",
+        "Clicking a listed user opens a private chat UI for that specific user.",
+        "When logged out, chat UI entry points are hidden or disabled with a clear prompt to log in."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Implement private chat UI behavior with polling: display message history, allow sending messages, and refresh for new messages automatically every 3 seconds while the chat is open.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "recent-messages-5"
+        ],
+        "quotes": [
+          "Refreshing itself for new massages every 3 seconds"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The chat view shows messages in chronological order and clearly distinguishes between \"You\" and the other user.",
+        "Sending a message posts it to the backend and it appears in the chat without needing a full page refresh.",
+        "While the chat is open, the app polls for new messages every 3 seconds and appends them without duplicating already-shown messages.",
+        "Polling stops when the chat view/modal is closed (no background polling for closed conversations).",
+        "User-facing labels and empty states are in English (e.g., \"Start a chat\", \"No messages yet\", \"Send\")."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not edit files under frontend/src/components/ui or any other immutable paths listed in SYSTEM_CONTEXT.",
+    "Do not implement WebSockets or true push-based realtime; implement periodic polling every 3 seconds as requested.",
+    "Backend must remain a single Motoko actor (backend/main.mo).",
+    "Do not add third-party auth providers; only Internet Identity is allowed (already present)."
+  ],
+  "nonGoals": [
+    "Group chats or public chat rooms.",
+    "Typing indicators, read receipts, message reactions, attachments, or media sending.",
+    "End-to-end encryption.",
+    "Presence/online status."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

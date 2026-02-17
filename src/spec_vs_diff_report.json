@@ -1,0 +1,82 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-17T13:54:56.276Z",
+  "summary": "Frontend adds chat entry points and modal components, plus a private chat hook intended to poll every 3 seconds. Backend adds a user selection list query and chat-related types/state, but the diff summary does not show the required backend endpoints for sending/fetching messages or a working polling flow (conversationId is never established in the hook). Several unrelated utilities and access-control/token handling changes appear in the diff.",
+  "missing_requirements": [
+    {
+      "id": "REQ-2",
+      "requirement": "Backend support for private 1:1 chat: authenticated send to recipient principal; store per conversation (order-independent); fetch messages with incremental updates (after id/timestamp); anonymous cannot send (clear trap).",
+      "reason": "Although chat types/state are added in backend/main.mo (ChatMessage, Conversation, conversations map), the diff summary does not show any public backend methods to send messages or fetch conversation messages incrementally (e.g., sendMessage, getConversationMessages with an after-id parameter), nor the anonymous-caller trap behavior.",
+      "evidence": [
+        "backend/main.mo (shows ChatMessage/Conversation types and conversations vars; shows getChatUserSelectionList, but no send/fetch chat endpoints in provided content)",
+        "frontend/src/hooks/usePrivateChat.ts (calls actor.sendMessage(...) and actor.getConversationMessages(...), implying required backend methods, but they are not evidenced in backend diff snippet)"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "requirement": "Private chat UI behavior with polling every 3 seconds while chat is open; append without duplicates; stop polling when closed.",
+      "reason": "The polling effect is gated on conversationId, but conversationId is never set in the provided hook code; loadConversation() explicitly does not fetch/create a conversation and sets messages empty. As shown, polling would never start, so the 3-second refresh requirement is not actually met by the evidenced implementation.",
+      "evidence": [
+        "frontend/src/hooks/usePrivateChat.ts (conversationId initialized null; loadConversation sets messages to [] and never sets conversationId; polling useEffect returns early if !conversationId; pollMessages returns early if !conversationId)"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Added URL/session parameter utilities unrelated to private chat (including hash/query parsing and sessionStorage helpers).",
+      "reason": "Not requested by the BuildRequest; no requirement mentions URL param persistence utilities.",
+      "evidence": [
+        "frontend/src/utils/urlParams.ts"
+      ]
+    },
+    {
+      "description": "Introduced use of a 'caffeineAdminToken' secret parameter and automatic access-control initialization on actor creation.",
+      "reason": "Not requested (BuildRequest explicitly constrained auth to Internet Identity only and did not request admin-token handling).",
+      "evidence": [
+        "frontend/src/hooks/useActor.ts (getSecretParameter('caffeineAdminToken'); actor._initializeAccessControlWithSecret(adminToken))"
+      ]
+    },
+    {
+      "description": "Added a backend migration module that appears to be a no-op passthrough for existing state shapes.",
+      "reason": "Not requested; BuildRequest did not ask for data migrations.",
+      "evidence": [
+        "backend/migration.mo",
+        "backend/main.mo (with migration = Migration.run)"
+      ]
+    },
+    {
+      "description": "Unrelated comment UI enhancements (reply/delete confirmation and additional controls).",
+      "reason": "Not requested; BuildRequest scope is private 1:1 chat only.",
+      "evidence": [
+        "frontend/src/components/Comment.tsx"
+      ]
+    },
+    {
+      "description": "Refactors/changes to followers/following user list modal using custom React Query hooks.",
+      "reason": "Not requested by the chat-focused BuildRequest.",
+      "evidence": [
+        "frontend/src/components/UserListModal.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.66,
+  "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "frontend-file-summaries.txt",
+    "frontend/src/App.tsx",
+    "frontend/src/components/ChatUserPickerModal.tsx",
+    "frontend/src/components/Comment.tsx",
+    "frontend/src/components/PrivateChatModal.tsx",
+    "frontend/src/components/TopHeader.tsx",
+    "frontend/src/components/UserListModal.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/usePrivateChat.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/main.tsx",
+    "frontend/src/utils/urlParams.ts",
+    "project_state.json"
+  ]
+}

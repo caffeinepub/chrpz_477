@@ -1,0 +1,98 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Private 1:1 chat with user picker and 3-second polling",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Confirm existing Internet Identity login/logout UI remains the only auth entry point and stays intact.",
+      "acceptanceCriteria": [
+        "When logged out, the existing \"Login\" button in the top header still signs in via Internet Identity.",
+        "When logged in, the existing logout flow still works.",
+        "No additional/duplicate Internet Identity providers, contexts, or login buttons are added beyond what already exists."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/TopHeader.tsx",
+          "operation": "modify",
+          "description": "Ensure the existing Internet Identity login/logout button and flow remain unchanged while adding the chat entry point; do not introduce any new auth providers, contexts, or duplicate login buttons. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire any new chat UI state in a way that does not alter the existing authentication-driven rendering logic (e.g., profile setup flow, logout resets). Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Add an authenticated Chat entry point that opens a user-picker modal and launches a private chat view for the selected user.",
+      "acceptanceCriteria": [
+        "When logged in, a user can open a chat user-picker modal from the main UI (e.g., top header).",
+        "The user-picker modal lists users with their avatar and display name/username.",
+        "Clicking a listed user opens a private chat UI for that specific user.",
+        "When logged out, chat UI entry points are hidden or disabled with a clear prompt to log in."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ChatUserPickerModal.tsx",
+          "operation": "create",
+          "description": "Create a user-picker modal built on the existing BaseModal and UserAvatar components that fetches the selectable chat user list (principal + displayName/username) and renders avatars using the existing useProfilePicture hook. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/TopHeader.tsx",
+          "operation": "modify",
+          "description": "Add a \"Chat\" button in the authenticated header area that opens ChatUserPickerModal; when logged out, hide/disable the Chat entry point and show a clear English prompt to log in if interacted with. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add a React Query hook for fetching the chat user selection list (using the backend capability to list selectable users excluding the caller) and expose loading/error states for the user-picker modal. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire modal state: open/close the ChatUserPickerModal from the main UI and, upon user selection, open the private chat UI for the selected principal. Ensure no orphan chat components by rendering them conditionally from App. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Implement private chat view with message history, send, and 3-second polling that stops when closed.",
+      "acceptanceCriteria": [
+        "The chat view shows messages in chronological order and clearly distinguishes between \"You\" and the other user.",
+        "Sending a message posts it to the backend and it appears in the chat without needing a full page refresh.",
+        "While the chat is open, the app polls for new messages every 3 seconds and appends them without duplicating already-shown messages.",
+        "Polling stops when the chat view/modal is closed (no background polling for closed conversations).",
+        "User-facing labels and empty states are in English (e.g., \"Start a chat\", \"No messages yet\", \"Send\")."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/PrivateChatModal.tsx",
+          "operation": "create",
+          "description": "Create a private chat modal (using BaseModal) that shows message history, differentiates \"You\" vs other user by comparing message.sender to the current identity principal, includes an English empty state, and provides a message composer to send messages. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/usePrivateChat.ts",
+          "operation": "create",
+          "description": "Add a hook to manage chat state and polling: load initial history, track last seen message id, poll for incremental updates every 3 seconds only while the chat modal is open, de-duplicate by message id, and cleanly stop polling on unmount/close. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add mutations/utilities needed by the chat UI (e.g., a sendMessage mutation using the existing backend send capability) and shared error handling for authorization traps to show clear English messages in the chat UI. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Render and wire the PrivateChatModal so it opens after selecting a user in the picker, and closes cleanly (ensuring polling stops). Keep the rest of the app navigation unchanged. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/backend.d.ts",
+          "operation": "modify",
+          "description": "If required to support opening a conversation for a selected user, update the frontend backend interface typings to include the backend capability used to resolve or create the 1:1 conversation identifier (so the chat UI can call getConversationMessages incrementally). Verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
+}
